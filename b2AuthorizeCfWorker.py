@@ -61,10 +61,10 @@ resp2Data = json.loads(resp2Content)
 bDownAuToken = resp2Data["authorizationToken"]
 
 if flagDebug:
-    print("authorizationToken: " + bDownAuToken)
-    print("downloadUrl: " + bFileDownloadUrl)
-    print("recommendedPartSize: " + str(bPartSize))
-    print("apiUrl: " + bApiUrl)
+    print(f"authorizationToken: {bDownAuToken}")
+    print(f"downloadUrl: {bFileDownloadUrl}")
+    print(f"recommendedPartSize: {str(bPartSize)}")
+    print(f"apiUrl: {bApiUrl}")
 
 workerTemplate = """addEventListener('fetch', event => {
     event.respondWith(handleRequest(event.request))
@@ -83,10 +83,14 @@ return response
 
 workerCode = workerTemplate.replace('<B2_DOWNLOAD_TOKEN>', bDownAuToken)
 
-cfHeaders = { 'Authorization' : "Bearer " + cfWorkerApi,
-              'Content-Type' : 'application/javascript' }
+cfHeaders = {
+    'Authorization': f"Bearer {cfWorkerApi}",
+    'Content-Type': 'application/javascript',
+}
 
-cfUrl = 'https://api.cloudflare.com/client/v4/accounts/' + cfAccountId + "/workers/scripts/" + cfWorkerName
+
+cfUrl = f'https://api.cloudflare.com/client/v4/accounts/{cfAccountId}/workers/scripts/{cfWorkerName}'
+
 
 resp = requests.put(cfUrl, headers=cfHeaders, data=workerCode)
 
